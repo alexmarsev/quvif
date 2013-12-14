@@ -1,3 +1,6 @@
 [submodule "quvi/libquvi"]
 	path = quvi/libquvi
 	url = git://github.com/legatvs/libquvi.git
+[submodule "quvi/libquvi-scripts"]
+	path = quvi/libquvi-scripts
+	url = git://github.com/legatvs/libquvi-scripts.git
