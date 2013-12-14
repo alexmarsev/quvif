@@ -1,0 +1,3 @@
+[submodule "quvi/libquvi"]
+	path = quvi/libquvi
+	url = git://github.com/legatvs/libquvi.git
