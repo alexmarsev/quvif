@@ -4,3 +4,6 @@
 [submodule "quvi/libquvi-scripts"]
 	path = quvi/libquvi-scripts
 	url = git://github.com/legatvs/libquvi-scripts.git
+[submodule "quvi/lua"]
+	path = quvi/lua
+	url = git://github.com/LuaDist/lua.git
