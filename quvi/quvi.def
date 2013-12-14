@@ -1,0 +1,19 @@
+EXPORTS
+	quvi_init
+	quvi_init
+	quvi_close
+	quvi_setopt
+	quvi_getinfo
+	quvi_parse
+	quvi_parse_close
+	quvi_getprop
+	quvi_query_formats
+	quvi_next_media_url
+	quvi_supported
+	quvi_supported_ident
+	quvi_ident_getprop
+	quvi_supported_ident_close
+	quvi_next_supported_website
+	quvi_strerror
+	quvi_version
+	quvi_free

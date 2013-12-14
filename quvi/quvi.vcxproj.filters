@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="lua">
+      <UniqueIdentifier>{387b6048-2769-407f-a857-dde9c429963e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libquvi">
+      <UniqueIdentifier>{fd353b58-1b3c-4a7b-82dc-4c0296a9d270}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="lua\src\lapi.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lauxlib.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lbaselib.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lbitlib.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lcode.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lcorolib.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lctype.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\ldblib.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\ldebug.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\ldo.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\ldump.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lfunc.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lgc.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\linit.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\liolib.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\llex.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lmathlib.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lmem.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\loadlib.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lobject.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lopcodes.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\loslib.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lparser.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lstate.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lstring.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lstrlib.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\ltable.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\ltablib.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\ltm.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lundump.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lvm.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="lua\src\lzio.c">
+      <Filter>lua</Filter>
+    </ClCompile>
+    <ClCompile Include="libquvi\src\libquvi\curl_wrap.c">
+      <Filter>libquvi</Filter>
+    </ClCompile>
+    <ClCompile Include="libquvi\src\libquvi\lua_wrap.c">
+      <Filter>libquvi</Filter>
+    </ClCompile>
+    <ClCompile Include="libquvi\src\libquvi\llst_api.c">
+      <Filter>libquvi</Filter>
+    </ClCompile>
+    <ClCompile Include="libquvi\src\libquvi\net_api.c">
+      <Filter>libquvi</Filter>
+    </ClCompile>
+    <ClCompile Include="libquvi\src\libquvi\net_wrap.c">
+      <Filter>libquvi</Filter>
+    </ClCompile>
+    <ClCompile Include="libquvi\src\libquvi\quvi_api.c">
+      <Filter>libquvi</Filter>
+    </ClCompile>
+    <ClCompile Include="libquvi\src\libquvi\strepl.c">
+      <Filter>libquvi</Filter>
+    </ClCompile>
+    <ClCompile Include="libquvi\src\libquvi\util.c">
+      <Filter>libquvi</Filter>
+    </ClCompile>
+    <ClCompile Include="libquvi\src\libquvi\asprintf.c">
+      <Filter>libquvi</Filter>
+    </ClCompile>
+    <ClCompile Include="libquvi\src\libquvi\vasprintf.c">
+      <Filter>libquvi</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="lua\src\lapi.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lauxlib.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lcode.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lctype.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\ldebug.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\ldo.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lfunc.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lgc.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\llex.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\llimits.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lmem.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lobject.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lopcodes.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lparser.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lstate.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lstring.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\ltable.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\ltm.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lua.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lualib.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lundump.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lvm.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="lua\src\lzio.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="luaconf.h">
+      <Filter>lua</Filter>
+    </ClInclude>
+    <ClInclude Include="libquvi\src\libquvi\quvi\llst.h">
+      <Filter>libquvi</Filter>
+    </ClInclude>
+    <ClInclude Include="libquvi\src\libquvi\quvi\net.h">
+      <Filter>libquvi</Filter>
+    </ClInclude>
+    <ClInclude Include="libquvi\src\libquvi\quvi\quvi.h">
+      <Filter>libquvi</Filter>
+    </ClInclude>
+    <ClInclude Include="libquvi\src\libquvi\curl_wrap.h">
+      <Filter>libquvi</Filter>
+    </ClInclude>
+    <ClInclude Include="libquvi\src\libquvi\lua_wrap.h">
+      <Filter>libquvi</Filter>
+    </ClInclude>
+    <ClInclude Include="libquvi\src\libquvi\internal.h">
+      <Filter>libquvi</Filter>
+    </ClInclude>
+    <ClInclude Include="libquvi\src\libquvi\net_wrap.h">
+      <Filter>libquvi</Filter>
+    </ClInclude>
+    <ClInclude Include="libquvi\src\libquvi\platform.h">
+      <Filter>libquvi</Filter>
+    </ClInclude>
+    <ClInclude Include="libquvi\src\libquvi\util.h">
+      <Filter>libquvi</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>libquvi</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
