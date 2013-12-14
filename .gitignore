@@ -1,1 +1,10 @@
 /deps/curl/lib
+/Debug
+/*/Debug
+/Release
+/*/Release
+/ipch
+*.sdf
+*.opensdf
+*.suo
+*.vcxproj.user
