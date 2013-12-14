@@ -30,7 +30,7 @@ const AMOVIESETUP_PIN sudPin = {
 };
 
 const AMOVIESETUP_FILTER sudQuviSource = {
-	&__uuidof(CQuviSourceFilter), QuviSourceFilterName, MERIT_UNLIKELY, 1, &sudPin, CLSID_LegacyAmFilterCategory
+	&__uuidof(CQuviSourceFilter), QuviSourceFilterName, MERIT_UNLIKELY, 1, &sudPin, &CLSID_LegacyAmFilterCategory
 };
 
 CFactoryTemplate g_Templates[1] = {
