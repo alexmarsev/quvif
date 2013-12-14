@@ -10,14 +10,15 @@
 
 #define __STREAMS__
 
-#ifdef	_MSC_VER
-// disable some level-4 warnings, use #pragma warning(enable:###) to re-enable
+// temporarily disable some level-4 warnings
+#pragma warning(push)
 #pragma warning(disable:4100) // warning C4100: unreferenced formal parameter
 #pragma warning(disable:4201) // warning C4201: nonstandard extension used : nameless struct/union
 #pragma warning(disable:4511) // warning C4511: copy constructor could not be generated
 #pragma warning(disable:4512) // warning C4512: assignment operator could not be generated
 #pragma warning(disable:4514) // warning C4514: "unreferenced inline function has been removed"
 
+#ifdef	_MSC_VER
 #if _MSC_VER>=1100
 #define AM_NOVTABLE __declspec(novtable)
 #else
@@ -191,3 +192,5 @@ LONG_PTR _SetWindowLongPtr(HWND hwnd, int nIndex, T p)
 #include <strmctl.h>    // IAMStreamControl support
 #include <edevdefs.h>   // External device control interface defines
 #include <audevcod.h>   // audio filter device error event codes
+
+#pragma warning(pop)
