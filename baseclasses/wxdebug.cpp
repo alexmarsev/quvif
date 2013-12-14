@@ -385,8 +385,8 @@ void WINAPI DbgInitGlobalSettings(bool fTakeMax)
                                  NULL);                // What really happened
         if (lReturn != ERROR_SUCCESS) {
             DbgLog((LOG_ERROR,1,TEXT("Could not access GLOBAL module key")));
+            return;
         }
-        return;
     }
 
     DbgInitKeyLevels(hGlobalKey, fTakeMax);
@@ -432,8 +432,8 @@ void WINAPI DbgInitModuleSettings(bool fTakeMax)
                                  NULL);                // What really happened
         if (lReturn != ERROR_SUCCESS) {
             DbgLog((LOG_ERROR,1,TEXT("Could not access module key")));
+            return;
         }
-        return;
     }
 
     DbgInitLogTo(hModuleKey);
