@@ -6,8 +6,8 @@
 // Copyright (c) 1992-2001 Microsoft Corporation.  All rights reserved.
 //------------------------------------------------------------------------------
 
+#pragma once
 
-#ifndef __STREAMS__
 #define __STREAMS__
 
 #ifdef	_MSC_VER
@@ -191,12 +191,3 @@ LONG_PTR _SetWindowLongPtr(HWND hwnd, int nIndex, T p)
 #include <strmctl.h>    // IAMStreamControl support
 #include <edevdefs.h>   // External device control interface defines
 #include <audevcod.h>   // audio filter device error event codes
-
-
-
-#else
-    #ifdef DEBUG
-    #pragma message("STREAMS.H included TWICE")
-    #endif
-#endif // __STREAMS__
-
