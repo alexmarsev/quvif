@@ -142,6 +142,7 @@ bool QuviMedia::ToCache(CurlCallbackData& data) {
 	}
 
 	// update curl callback data
+	assert(data.storing == CachePacketSize || data.current + 1 == m_cache.size());
 	data.storing = 0;
 	data.current++;
 	assert(data.undone > 0);
