@@ -1,4 +1,4 @@
-/deps/curl/lib
+/deps/*/lib
 /Debug
 /*/Debug
 /Release
