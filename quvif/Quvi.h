@@ -31,7 +31,7 @@
 
 class QuviMediaInfo {
 	class Quvi final {
-		quvi_t q;
+		quvi_t q = {};
 	public:
 		Quvi();
 		~Quvi() { quvi_close(&q); }
@@ -39,7 +39,7 @@ class QuviMediaInfo {
 	};
 
 	class QuviParse final {
-		quvi_media_t qm;
+		quvi_media_t qm = {};
 	public:
 		QuviParse(Quvi& q, const std::wstring& url);
 		~QuviParse() { quvi_parse_close(&qm); }
@@ -50,13 +50,13 @@ class QuviMediaInfo {
 	std::wstring m_url;
 	std::string m_murl;
 	std::wstring m_title;
-	uint64_t m_length;
+	uint64_t m_length = 0;
 
 	Quvi m_q;
 	QuviParse m_qp;
 
 protected:
-	CURL* m_curl;
+	CURL* m_curl = nullptr;
 
 public:
 	QuviMediaInfo(std::wstring&& url);
@@ -79,24 +79,20 @@ private:
 
 	std::thread m_worker;
 	std::mutex m_workerMutex;
-	bool m_bWorkerInactive;
+	bool m_bWorkerInactive = false;
 
 	std::list<std::pair<size_t, std::promise<void>>> m_promises;
 	std::future<void> Promise(size_t index);
 
-	bool m_bDestroying;
+	bool m_bDestroying = false;
 
 	struct CurlCallbackData {
 		QuviMedia* owner;
 		CachePacket packet;
-		size_t storing; // bytes
-		size_t current; // packet
-		size_t undone; // packets
-		CurlCallbackData(QuviMedia* owner) 
-			: owner(owner), storing(0), current(0), undone(0)
-		{
-			assert(owner);
-		}
+		size_t storing = 0; // bytes
+		size_t current = 0; // packet
+		size_t undone = 0; // packets
+		CurlCallbackData(QuviMedia* owner) : owner(owner) { assert(owner); }
 	};
 
 	static size_t CurlCallback(char* ptr, size_t size, size_t nmemb, void* userdata);

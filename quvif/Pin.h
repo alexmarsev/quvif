@@ -53,5 +53,5 @@ public:
 private:
 	typedef CBasePin super;
 	CQuviSourceFilter* m_pFilter;
-	bool m_bQueriedAsyncReader;
+	bool m_bQueriedAsyncReader = false;
 };

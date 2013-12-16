@@ -46,9 +46,7 @@ QuviMediaInfo::QuviParse::QuviParse(Quvi& q, const std::wstring& url) {
 
 QuviMediaInfo::QuviMediaInfo(std::wstring&& url)
 	: m_ourl(std::move(url))
-	, m_length(0)
 	, m_qp(m_q, m_ourl)
-	, m_curl(nullptr)
 {
 	QUVIcode qc;
 
@@ -222,8 +220,6 @@ void QuviMedia::Loop() {
 
 QuviMedia::QuviMedia(std::wstring&& url)
 	: QuviMediaInfo(std::move(url))
-	, m_bWorkerInactive(false)
-	, m_bDestroying(false)
 {
 	size_t len = (size_t)(GetLength() / CachePacketSize);
 	if (GetLength() - len * CachePacketSize)

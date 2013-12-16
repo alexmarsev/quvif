@@ -26,7 +26,6 @@
 CQuviOutputPin::CQuviOutputPin(CQuviSourceFilter* pFilter, CCritSec* pLock, HRESULT* phr)
 	: CBasePin(L"Quvi Output Pin", pFilter, pLock, phr, L"Output", PINDIR_OUTPUT)
 	, m_pFilter(pFilter)
-	, m_bQueriedAsyncReader(false)
 {
 }
 
