@@ -94,22 +94,27 @@ size_t QuviMedia::CurlCallback(char* ptr, size_t size, size_t nmemb, void* userd
 	const size_t gotnow = size * nmemb;
 
 	assert(data.undone);
+	// abort if the filter is being destroyed
+	// or the server sends more data than it should
 	if (!data.undone || data.owner->m_bDestroying)
 		return gotnow + 1;
 
 	const size_t topacket = std::min(data.packet.size() - data.storing, gotnow);
 
+	// copy to current packet
 	if (topacket) {
 		memcpy(&data.packet[data.storing], ptr, topacket);
 		data.storing += topacket;
 	}
 
+	// if the packet is complete
 	if (data.storing == data.packet.size()) {
 		// copy packet to cache
+		// and decide whether to abort the transfer
 		if (!data.owner->ToCache(data))
 			return gotnow + 1;
 
-		// and remember possible stub
+		// remember possible stub
 		if (const size_t tostub = gotnow - topacket) {
 			memcpy(data.packet.data(), ptr + topacket, tostub);
 			data.storing += tostub;
@@ -136,13 +141,13 @@ bool QuviMedia::ToCache(CurlCallbackData& data) {
 		}
 	}
 
-	// update data state
+	// update curl callback data
 	data.storing = 0;
 	data.current++;
 	assert(data.undone > 0);
 	data.undone--;
 
-	// return false if next promise requires a jump
+	// abort the transfer if next promise requires a jump
 	if (data.undone && !m_promises.empty()) {
 		// TODO: don't do this if the server doesn't support http range requests
 		const size_t next = m_promises.front().first;
@@ -173,7 +178,7 @@ void QuviMedia::Loop() {
 				left += m_promises.front().first;
 				assert(!m_cache[left]);
 			} else {
-				// or find first missing packet
+				// or first missing packet
 				for (; left < m_cache.size() && m_cache[left]; ++left);
 			}
 
@@ -193,11 +198,11 @@ void QuviMedia::Loop() {
 		assert(leftb <= rightb);
 		assert(rightb < GetLength());
 
-		// set http range
+		// set up http range
 		const std::string range = std::to_string(leftb) + "-" + std::to_string(rightb);
 		curl_easy_setopt(m_curl, CURLOPT_RANGE, range.c_str());
 
-		// set callback data
+		// set curl callback data
 		assert(!data.storing);
 		data.current = left;
 		data.undone = right - left;
@@ -205,7 +210,9 @@ void QuviMedia::Loop() {
 		return true;
 	};
 
+	// while there are things to download
 	while (!m_bDestroying && setRange()) {
+		// download the range
 		const CURLcode cc = curl_easy_perform(m_curl);
 		if (cc == CURLE_OK && data.undone) {
 			// copy possible eof stub
@@ -221,8 +228,8 @@ void QuviMedia::Loop() {
 QuviMedia::QuviMedia(std::wstring&& url)
 	: QuviMediaInfo(std::move(url))
 {
-	size_t len = (size_t)(GetLength() / CachePacketSize);
-	if (GetLength() - len * CachePacketSize)
+	size_t len = (size_t)(GetLength() / CachePacketSize); // full packets
+	if (GetLength() - len * CachePacketSize) // eof stub packet
 		len++;
 	m_cache.resize(len);
 	m_worker = std::thread(std::bind(&QuviMedia::Loop, this));
@@ -243,10 +250,12 @@ bool QuviMedia::Get(uint64_t offset, size_t length, char* dest) {
 		assert(tocopy <= QuviMedia::CachePacketSize);
 		assert(packetoffset + tocopy <= QuviMedia::CachePacketSize);
 
+		// look in the cache
 		const auto& packet = m_cache[packetindex];
 		std::future<void> ft;
 
 		{
+			// request the packet if the cache doesn't have it
 			std::lock_guard<std::mutex> lock(m_workerMutex);
 			if (!packet)
 				ft = Promise(packetindex);
@@ -257,6 +266,7 @@ bool QuviMedia::Get(uint64_t offset, size_t length, char* dest) {
 			ft.get();
 		
 		{
+			// copy the packet
 			std::lock_guard<std::mutex> lock(m_workerMutex);
 			memcpy(dest, packet->data() + packetoffset, tocopy);
 		}
