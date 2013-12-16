@@ -69,7 +69,7 @@ STDMETHODIMP CQuviSourceFilter::GetCurFile(LPOLESTR* ppszFileName, AM_MEDIA_TYPE
 
 	// TODO: decide what exactly is appropriate to return as file name
 	// TODO: add file extension
-	const auto name = m_pQuvi->GetTitle();
+	const auto& name = m_pQuvi->GetTitle();
 	const size_t namelen = sizeof(name[0]) * (name.length() + 1);
 	*ppszFileName = static_cast<LPOLESTR>(CoTaskMemAlloc(namelen));
 	if (!*ppszFileName)
