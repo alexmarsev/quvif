@@ -111,7 +111,7 @@ STDMETHODIMP CQuviSourceFilter::Load(LPCOLESTR pszFileName, const AM_MEDIA_TYPE*
 			DbgLog((LOG_TRACE, 1, L"opening %s failed, unknown exception", pszFileName));
 		}
 	} else {
-		DbgLog((LOG_TRACE, 1, L"opening %s failed, it failed basic url checks", pszFileName));
+		DbgLog((LOG_TRACE, 1, L"opening %s failed, it failed basic url check", pszFileName));
 	}
 
 	return ret;

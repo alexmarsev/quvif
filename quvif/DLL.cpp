@@ -26,7 +26,7 @@ const AMOVIESETUP_MEDIATYPE sudPinTypes = {
 };
 
 const AMOVIESETUP_PIN sudPin = {
-	L"Output", FALSE, TRUE, FALSE, FALSE, &CLSID_NULL, NULL, 1, &sudPinTypes
+	L"Output", FALSE, TRUE, FALSE, FALSE, &CLSID_NULL, nullptr, 1, &sudPinTypes
 };
 
 const AMOVIESETUP_FILTER sudQuviSource = {

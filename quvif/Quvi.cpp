@@ -170,13 +170,13 @@ void QuviMedia::Loop() {
 		{
 			std::lock_guard<std::mutex> lock(m_workerMutex);
 			
-			if (m_promises.empty()) {
-				// find first missing packet
-				for (; left < m_cache.size() && m_cache[left]; ++left);
-			} else {
-				// or use first unfulfilled promise
+			if (!m_promises.empty()) {
+				// use first unfulfilled promise
 				left += m_promises.front().first;
 				assert(!m_cache[left]);
+			} else {
+				// or find first missing packet
+				for (; left < m_cache.size() && m_cache[left]; ++left);
 			}
 
 			// got it all
@@ -236,7 +236,6 @@ QuviMedia::~QuviMedia() {
 	m_bDestroying = true;
 	m_worker.join();
 }
-
 
 bool QuviMedia::Get(uint64_t offset, size_t length, char* dest) {
 	assert(offset >= 0 && length > 0 && dest);
