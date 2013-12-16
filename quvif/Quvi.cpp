@@ -35,6 +35,12 @@ QuviMediaInfo::Quvi::Quvi() {
 	QUVIcode qc = quvi_init(&q);
 	if (qc != QUVI_OK)
 		throw qc;
+	qc = quvi_setopt(q, QUVIOPT_FORMAT, "best");
+	if (qc != QUVI_OK)
+		throw qc;
+	qc = quvi_setopt(q, QUVIOPT_CATEGORY, QUVIPROTO_HTTP);
+	if (qc != QUVI_OK)
+		throw qc;
 }
 
 QuviMediaInfo::QuviParse::QuviParse(Quvi& q, const std::wstring& url) {
