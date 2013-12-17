@@ -82,7 +82,7 @@ STDMETHODIMP CQuviOutputPin::Length(LONGLONG* pTotal, LONGLONG* pAvailable) {
 	// TODO: handle zero length correctly
 	// TODO: do something more smart to actual length
 	// TODO: support untrustworthy file lengths
-	*pTotal = *pAvailable = m_pFilter->m_pQuvi->GetLength();
+	*pTotal = *pAvailable = m_pFilter->m_pQuvi->GetContentLength();
 
 	return S_OK;
 }
@@ -100,7 +100,7 @@ STDMETHODIMP CQuviOutputPin::RequestAllocator(IMemAllocator* pPreferred, ALLOCAT
 STDMETHODIMP CQuviOutputPin::SyncRead(LONGLONG llPosition, LONG lLength, BYTE* pBuffer) {
 	CheckPointer(pBuffer, E_POINTER);
 
-	const uint64_t filelen = m_pFilter->m_pQuvi->GetLength();
+	const uint64_t filelen = m_pFilter->m_pQuvi->GetContentLength();
 
 	if (llPosition < 0 || (uint64_t)llPosition >= filelen || lLength <= 0)
 		return E_INVALIDARG;

@@ -71,10 +71,15 @@ QuviMediaInfo::QuviMediaInfo(std::wstring&& url)
 		m_title = convert.from_bytes(infoTitle);
 	}
 
+	char* infoContentType = nullptr;
+	qc = quvi_getprop(m_qp, QUVIPROP_MEDIACONTENTTYPE, &infoContentType);
+	if (qc == QUVI_OK && infoContentType)
+		m_contentType = infoContentType;
+
 	double len = 0;
 	qc = quvi_getprop(m_qp, QUVIPROP_MEDIACONTENTLENGTH, &len);
 	if (qc == QUVI_OK && len > 0)
-		m_length = (uint64_t)len;
+		m_contentLength = (uint64_t)len;
 
 	qc = quvi_getinfo(m_q, QUVIINFO_CURL, &m_curl);
 	if (qc != QUVI_OK || !m_curl)
@@ -201,9 +206,9 @@ void QuviMedia::Loop() {
 
 		// convert to byte indexes
 		const uint64_t leftb = (uint64_t)left * CachePacketSize;
-		const uint64_t rightb = std::min((uint64_t)right * CachePacketSize - 1, GetLength() - 1);
+		const uint64_t rightb = std::min((uint64_t)right * CachePacketSize - 1, GetContentLength() - 1);
 		assert(leftb <= rightb);
-		assert(rightb < GetLength());
+		assert(rightb < GetContentLength());
 
 		// set up http range
 		const std::string range = std::to_string(leftb) + "-" + std::to_string(rightb);
@@ -235,8 +240,8 @@ void QuviMedia::Loop() {
 QuviMedia::QuviMedia(std::wstring&& url)
 	: QuviMediaInfo(std::move(url))
 {
-	size_t len = (size_t)(GetLength() / CachePacketSize); // full packets
-	if (GetLength() - len * CachePacketSize) // eof stub packet
+	size_t len = (size_t)(GetContentLength() / CachePacketSize); // full packets
+	if (GetContentLength() - len * CachePacketSize) // eof stub packet
 		len++;
 	m_cache.resize(len);
 	m_worker = std::thread(std::bind(&QuviMedia::Loop, this));

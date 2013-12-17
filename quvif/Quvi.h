@@ -50,7 +50,8 @@ class QuviMediaInfo {
 	std::wstring m_url;
 	std::string m_murl;
 	std::wstring m_title;
-	uint64_t m_length = 0;
+	std::string m_contentType;
+	uint64_t m_contentLength = 0;
 
 	Quvi m_q;
 	QuviParse m_qp;
@@ -66,7 +67,8 @@ public:
 	const std::wstring& GetUrl() const { return m_url; }
 	const std::string& GetMultibyteUrl() const { return m_murl; }
 	const std::wstring& GetTitle() const { return m_title; }
-	uint64_t GetLength() const { return m_length; }
+	const std::string& GetContentType() const { return m_contentType; }
+	uint64_t GetContentLength() const { return m_contentLength; }
 };
 
 class QuviMedia final : public QuviMediaInfo {
