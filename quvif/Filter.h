@@ -22,6 +22,7 @@
 
 #include <streams.h>
 #include <memory>
+#include <vector>
 
 class CQuviOutputPin;
 class QuviMedia;
@@ -59,6 +60,6 @@ public:
 
 private:
 	typedef CBaseFilter super;
-	CQuviOutputPin* m_pPin;
+	std::vector<std::unique_ptr<CQuviOutputPin>> m_pins;
 	std::unique_ptr<QuviMedia> m_pQuvi;
 };

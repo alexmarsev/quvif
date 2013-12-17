@@ -29,7 +29,7 @@ class CQuviOutputPin final
 	, public IAsyncReader
 {
 public:
-	CQuviOutputPin(CQuviSourceFilter* pFilter, CCritSec* pLock, HRESULT* phr);
+	CQuviOutputPin(CQuviSourceFilter* pFilter, size_t index, CCritSec* pLock, HRESULT* phr);
 
 	DECLARE_IUNKNOWN;
 
@@ -53,5 +53,6 @@ public:
 private:
 	typedef CBasePin super;
 	CQuviSourceFilter* m_pFilter;
+	const size_t m_index;
 	bool m_bQueriedAsyncReader = false;
 };

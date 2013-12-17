@@ -23,11 +23,8 @@
 #include <curl/curl.h>
 #include <quvi.h>
 
-#include <array>
-#include <future>
-#include <list>
-#include <mutex>
 #include <string>
+#include <vector>
 
 class QuviMediaInfo {
 	class Quvi final {
@@ -71,41 +68,26 @@ public:
 	uint64_t GetContentLength() const { return m_contentLength; }
 };
 
-class QuviMedia final : public QuviMediaInfo {
+class QuviMediaBackend {
 public:
-	static const size_t CachePacketSize = 64 * 1024;
+	virtual ~QuviMediaBackend() {};
+	virtual bool Get(uint64_t offset, size_t length, char* dest) = 0;
+	virtual uint64_t GetCurrentLength() = 0;
+	virtual uint64_t GetTotalLength() = 0;
+};
 
-private:
-	typedef std::array<char, CachePacketSize> CachePacket;
-	std::vector<std::unique_ptr<CachePacket>> m_cache;
+class QuviMedia final : public QuviMediaInfo {
+	std::vector<std::unique_ptr<QuviMediaBackend>> m_backends;
 
-	std::thread m_worker;
-	std::mutex m_workerMutex;
-	bool m_bWorkerInactive = false;
-
-	std::list<std::pair<size_t, std::promise<void>>> m_promises;
-	std::future<void> Promise(size_t index);
-
-	bool m_bDestroying = false;
-
-	struct CurlCallbackData {
-		QuviMedia* owner;
-		CachePacket packet;
-		size_t storing = 0; // bytes
-		size_t current = 0; // packet
-		size_t undone = 0; // packets
-		CurlCallbackData(QuviMedia* owner) : owner(owner) { assert(owner); }
-	};
-
-	static size_t CurlCallback(char* ptr, size_t size, size_t nmemb, void* userdata);
-
-	bool ToCache(CurlCallbackData& data);
-
-	void Loop();
+	CURLSH* m_curlsh;
+	static void CurlShareLockFunction(CURL* handle, curl_lock_data data, curl_lock_access access, void* userptr);
+	static void CurlShareUnlockFunction(CURL* handle, curl_lock_data data, void* userptr);
+	typedef std::array<std::mutex, CURL_LOCK_DATA_LAST> CurlSharedLock;
+	CurlSharedLock m_curlshLock;
 
 public:
 	QuviMedia(std::wstring&& url);
 	~QuviMedia();
 
-	bool Get(uint64_t offset, size_t length, char* dest);
+	const std::vector<std::unique_ptr<QuviMediaBackend>>& GetBackends() { return m_backends; }
 };

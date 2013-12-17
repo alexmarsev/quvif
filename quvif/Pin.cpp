@@ -23,9 +23,10 @@
 #include "Filter.h"
 #include "Quvi.h"
 
-CQuviOutputPin::CQuviOutputPin(CQuviSourceFilter* pFilter, CCritSec* pLock, HRESULT* phr)
-	: CBasePin(L"Quvi Output Pin", pFilter, pLock, phr, L"Output", PINDIR_OUTPUT)
+CQuviOutputPin::CQuviOutputPin(CQuviSourceFilter* pFilter, size_t index, CCritSec* pLock, HRESULT* phr)
+	: CBasePin(L"Quvi Output Pin", pFilter, pLock, phr, (L"Output" + std::to_wstring(index)).c_str(), PINDIR_OUTPUT)
 	, m_pFilter(pFilter)
+	, m_index(index)
 {
 }
 
@@ -82,7 +83,9 @@ STDMETHODIMP CQuviOutputPin::Length(LONGLONG* pTotal, LONGLONG* pAvailable) {
 	// TODO: handle zero length correctly
 	// TODO: do something more smart to actual length
 	// TODO: support untrustworthy file lengths
-	*pTotal = *pAvailable = m_pFilter->m_pQuvi->GetContentLength();
+	const auto& backend = m_pFilter->m_pQuvi->GetBackends()[m_index];
+	*pTotal = backend->GetTotalLength();
+	*pAvailable = backend->GetCurrentLength();
 
 	return S_OK;
 }
@@ -100,7 +103,9 @@ STDMETHODIMP CQuviOutputPin::RequestAllocator(IMemAllocator* pPreferred, ALLOCAT
 STDMETHODIMP CQuviOutputPin::SyncRead(LONGLONG llPosition, LONG lLength, BYTE* pBuffer) {
 	CheckPointer(pBuffer, E_POINTER);
 
-	const uint64_t filelen = m_pFilter->m_pQuvi->GetContentLength();
+	const auto& backend = m_pFilter->m_pQuvi->GetBackends()[m_index];
+
+	const uint64_t filelen = backend->GetTotalLength();
 
 	if (llPosition < 0 || (uint64_t)llPosition >= filelen || lLength <= 0)
 		return E_INVALIDARG;
@@ -113,7 +118,7 @@ STDMETHODIMP CQuviOutputPin::SyncRead(LONGLONG llPosition, LONG lLength, BYTE* p
 		assert(lLength > 0);
 	}
 
-	if (!m_pFilter->m_pQuvi->Get((uint64_t)llPosition, (size_t)lLength, (char*)pBuffer))
+	if (!backend->Get((uint64_t)llPosition, (size_t)lLength, (char*)pBuffer))
 		ret = E_FAIL;
 
 	return ret;

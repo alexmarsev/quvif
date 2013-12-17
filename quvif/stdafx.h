@@ -23,9 +23,13 @@
 #include <streams.h>
 
 #include <algorithm>
+#include <array>
 #include <codecvt>
+#include <future>
+#include <list>
 #include <locale>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <vector>
 

@@ -25,14 +25,12 @@
 
 CQuviSourceFilter::CQuviSourceFilter(LPUNKNOWN pUnk, HRESULT* phr)
 	: CBaseFilter(QuviSourceFilterName, pUnk, this, __uuidof(CQuviSourceFilter))
-	, m_pPin(new(std::nothrow) CQuviOutputPin(this, this, phr))
 {
-	if (!m_pPin && phr)
-		*phr = E_OUTOFMEMORY;
+	if (phr)
+		*phr = S_OK;
 }
 
 CQuviSourceFilter::~CQuviSourceFilter() {
-	delete m_pPin;
 }
 
 const AM_MEDIA_TYPE CQuviSourceFilter::QuviMediaType = {
@@ -54,11 +52,13 @@ STDMETHODIMP CQuviSourceFilter::NonDelegatingQueryInterface(REFIID riid, void** 
 }
 
 int CQuviSourceFilter::GetPinCount() {
-	return 1;
+	return m_pins.size();
 }
 
 CBasePin* CQuviSourceFilter::GetPin(int n) {
-	return n == 0 ? m_pPin : nullptr;
+	if (n < 0 || (size_t)n >= m_pins.size())
+		return nullptr;
+	return m_pins[n].get();
 }
 
 STDMETHODIMP CQuviSourceFilter::GetCurFile(LPOLESTR* ppszFileName, AM_MEDIA_TYPE* pmt) {
@@ -86,8 +86,8 @@ STDMETHODIMP CQuviSourceFilter::Load(LPCOLESTR pszFileName, const AM_MEDIA_TYPE*
 	CheckPointer(pszFileName, E_POINTER);
 	UNREFERENCED_PARAMETER(pmt);
 	
-	HRESULT ret = E_FAIL;
 	m_pQuvi.release();
+	m_pins.clear();
 
 	auto doBasicUrlCheck = [](const std::wstring& url) -> bool {
 		const std::wstring http(L"http://");
@@ -102,8 +102,6 @@ STDMETHODIMP CQuviSourceFilter::Load(LPCOLESTR pszFileName, const AM_MEDIA_TYPE*
 		try {
 			// then try to init quvi
 			m_pQuvi = std::make_unique<QuviMedia>(std::move(url));
-			DbgLog((LOG_TRACE, 1, L"sucessfully opened %s", pszFileName));
-			ret = S_OK;
 		} catch (QUVIcode qc) {
 			(qc); // silence unused variable warning in release builds
 			DbgLog((LOG_TRACE, 1, L"opening %s failed, quvi code: %d", pszFileName, (int)qc));
@@ -114,5 +112,29 @@ STDMETHODIMP CQuviSourceFilter::Load(LPCOLESTR pszFileName, const AM_MEDIA_TYPE*
 		DbgLog((LOG_TRACE, 1, L"opening %s failed, it failed basic url check", pszFileName));
 	}
 
-	return ret;
+	if (m_pQuvi) {
+		try {
+			// create output pins
+			for (size_t i = 0; i < m_pQuvi->GetBackends().size(); i++) {
+				HRESULT hr = S_OK;
+				m_pins.emplace_back(std::make_unique<CQuviOutputPin>(this, i, this, &hr));
+				if (hr != S_OK) {
+					m_pins.clear();
+					break;
+				}
+			}
+		} catch (...) {
+			m_pins.clear();
+		}
+		if (m_pins.empty())
+			DbgLog((LOG_TRACE, 1, L"opening %s failed, unable to create output pins", pszFileName));
+	}
+
+	if (!m_pins.empty()) {
+		DbgLog((LOG_TRACE, 1, L"sucessfully opened %s", pszFileName));
+		return S_OK;
+	} else {
+		m_pQuvi.release();
+		return E_FAIL;
+	}
 }
