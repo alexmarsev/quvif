@@ -21,6 +21,8 @@
 #include "stdafx.h"
 #include "Quvi.h"
 
+#include <libdash.h>
+
 std::wstring WideFromMultibyte(const char* src) {
 	std::wstring_convert<std::codecvt<wchar_t, char, std::mbstate_t>> convert;
 	return convert.from_bytes(src);
@@ -359,8 +361,87 @@ QuviMedia::QuviMedia(std::wstring&& url)
 	// TODO: ensure that cookies are properly inherited
 
 	if (GetContentType() == "video/vnd.mpeg.dash.mpd") {
-		// TODO: implement
-		assert(false);
+		std::string murl = GetMultibyteUrl();
+		if (murl.empty())
+			throw 1; // TODO: replace with some sensible exception
+		std::unique_ptr<dash::IDASHManager> manager(CreateDashManager());
+		if (!manager)
+			throw 1; // TODO: replace with some sensible exception
+		std::unique_ptr<dash::mpd::IMPD> mpd(manager->Open(&murl[0]));
+		if (!mpd)
+			throw 1; // TODO: replace with some sensible exception
+
+		const auto& period = mpd->GetPeriods().front();
+
+		for (const auto& adaptationSet : period->GetAdaptationSets()) {
+			const auto& representation = adaptationSet->GetRepresentation().back();
+
+			enum class DashRepresentationType {
+				Base,
+				Template,
+				List,
+			};
+
+			auto determineType = [](const dash::mpd::IPeriod* period,
+				const dash::mpd::IAdaptationSet* adaptationSet,
+				const dash::mpd::IRepresentation* representation) -> DashRepresentationType {
+				assert(representation && adaptationSet && period);
+				if (representation->GetSegmentList())
+					return DashRepresentationType::List;
+				if (representation->GetSegmentTemplate())
+					return DashRepresentationType::Template;
+				if (representation->GetSegmentBase() || !representation->GetBaseURLs().empty())
+					return DashRepresentationType::Base;
+
+				if (adaptationSet->GetSegmentList())
+					return DashRepresentationType::List;
+				if (adaptationSet->GetSegmentTemplate())
+					return DashRepresentationType::Template;
+				if (adaptationSet->GetSegmentBase())
+					return DashRepresentationType::Base;
+
+				if (period->GetSegmentList())
+					return DashRepresentationType::List;
+				if (period->GetSegmentTemplate())
+					return DashRepresentationType::Template;
+				if (period->GetSegmentBase())
+					return DashRepresentationType::Base;
+
+				throw 1; // TODO: replace with some sensible exception
+			};
+
+			const DashRepresentationType type = determineType(period, adaptationSet, representation);
+
+			if (type != DashRepresentationType::Base) // TODO: support other stream types
+				throw 1; // TODO: replace with some sensible exception
+
+			// TODO: support compound urls
+			std::unique_ptr<dash::network::IChunk> chunk(representation->GetBaseURLs()[0]->ToMediaSegment({}));
+			if (!chunk)
+				throw 1; // TODO: replace with some sensible exception
+
+			auto& uri = chunk->AbsoluteURI();
+			if (uri.empty())
+				throw 1; // TODO: replace with some sensible exception
+
+			curl_easy_setopt(m_curl, CURLOPT_URL, &uri[0]);
+			curl_easy_setopt(m_curl, CURLOPT_NOBODY, 1L);
+
+			CURLcode cc = curl_easy_perform(m_curl);
+			if (cc != CURLE_OK)
+				throw 1; // TODO: replace with some sensible exception
+
+			// TODO: use return codes
+			long code = 0, proxycode = 0;
+			curl_easy_getinfo(m_curl, CURLINFO_RESPONSE_CODE, &code);
+			curl_easy_getinfo(m_curl, CURLINFO_HTTP_CONNECTCODE, &proxycode);
+
+			double size = 0;
+			curl_easy_getinfo(m_curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &size);
+
+			curl_easy_setopt(m_curl, CURLOPT_HTTPGET, 1L);
+			m_backends.emplace_back(std::make_unique<QuviSimpleStreamBackend>((uint64_t)size, m_curl, m_curlsh));
+		}
 	} else {
 		assert(m_backends.empty());
 		m_backends.emplace_back(std::make_unique<QuviSimpleStreamBackend>(GetContentLength(), m_curl, m_curlsh));

@@ -39,7 +39,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../baseclasses;../quvi/libquvi/src/libquvi/quvi;../deps/curl/include/;$(IncludePath)</IncludePath>
+    <IncludePath>../baseclasses;../quvi/libquvi/src/libquvi/quvi;../deps/curl/include;../dash/include;$(IncludePath)</IncludePath>
     <TargetExt>.ax</TargetExt>
     <LibraryPath>../deps/curl/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -92,6 +92,9 @@
   <ItemGroup>
     <ProjectReference Include="..\baseclasses\baseclasses.vcxproj">
       <Project>{733b9b48-7a2f-49a0-bf8d-c3607e8b1cef}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\dash\dash.vcxproj">
+      <Project>{3a28f615-d2ec-45f3-a1d8-483e72e26d0e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\quvi\quvi.vcxproj">
       <Project>{eea049df-d9de-4d64-bc2a-0b63770f092e}</Project>
