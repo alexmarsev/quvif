@@ -333,7 +333,8 @@ public:
 
 void QuviMedia::CurlShareLockFunction(CURL* handle, curl_lock_data data, curl_lock_access access, void* userptr) {
 	UNREFERENCED_PARAMETER(handle);
-	if (access == CURL_LOCK_ACCESS_SINGLE) {
+	assert(access != CURL_LOCK_ACCESS_NONE);
+	if (access == CURL_LOCK_ACCESS_SHARED || access == CURL_LOCK_ACCESS_SINGLE) {
 		auto& locks = *static_cast<CurlSharedLock*>(userptr);
 		locks[data].lock();
 	}
